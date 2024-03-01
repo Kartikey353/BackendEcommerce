@@ -1,0 +1,1 @@
+{"version":3,"file":"get-shippings.dto.js","sourceRoot":"","sources":["../../../src/shippings/dto/get-shippings.dto.ts"],"names":[],"mappings":";;;;AAEA,MAAa,eAAe;;;;CAI3B;AAJD,0CAIC;AAED,IAAY,iCAOX;AAPD,WAAY,iCAAiC;IAC3C,8DAAyB,CAAA;IACzB,8DAAyB,CAAA;IACzB,kDAAa,CAAA;IACb,sDAAiB,CAAA;IACjB,4DAAuB,CAAA;IACvB,kDAAa,CAAA;AACf,CAAC,EAPW,iCAAiC,GAAjC,yCAAiC,KAAjC,yCAAiC,QAO5C"}
