@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 @Schema({timestamps:true})
 export class ProductModel extends Document {
   @Prop({ default: uuidv4 })
-  id: string;
+  id: number;
 
   @Prop({ required: true })
   name: string;
@@ -17,7 +17,7 @@ export class ProductModel extends Document {
   description: string;
 
   @Prop({ default: uuidv4 })
-  type_id: number;
+  type_id: string;
 
   @Prop({ required: true })
   price: number;
@@ -67,7 +67,7 @@ export class ProductModel extends Document {
   @Prop()
   length: number;
 
-  @Prop({ type: String, required: true }) // Assuming that the id, original, and thumbnail are strings
+  @Prop({ type: Object }) // Assuming that the id, original, and thumbnail are strings
   image: {
     id: string;
     original: string;
@@ -77,7 +77,7 @@ export class ProductModel extends Document {
   @Prop()
   video: string;
 
-  @Prop({type:String})
+  @Prop({type:Object})
   gallery: {
     id: string;
     original: string;
