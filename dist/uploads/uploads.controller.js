@@ -21,24 +21,17 @@ let UploadsController = class UploadsController {
     constructor(uploadsService) {
         this.uploadsService = uploadsService;
     }
-    uploadFile(attachment) {
-        console.log(attachment);
-        return [
-            {
-                id: '883',
-                original: 'https://pickbazarlaravel.s3.ap-southeast-1.amazonaws.com/881/aatik-tasneem-7omHUGhhmZ0-unsplash%402x.png',
-                thumbnail: 'https://pickbazarlaravel.s3.ap-southeast-1.amazonaws.com/881/conversions/aatik-tasneem-7omHUGhhmZ0-unsplash%402x-thumbnail.jpg',
-            },
-        ];
+    uploadFile(file) {
+        return this.uploadsService.uploadFile(file);
     }
 };
 __decorate([
     (0, common_1.Post)(),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('attachment[]')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     openapi.ApiResponse({ status: 201 }),
-    __param(0, (0, common_1.UploadedFiles)()),
+    __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Array]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UploadsController.prototype, "uploadFile", null);
 UploadsController = __decorate([
