@@ -16,7 +16,7 @@ enum ProductStatus {
 enum ProductType {
   SIMPLE = 'simple',
   VARIABLE = 'variable',
-}
+} 
 
 export class Product extends CoreEntity {
   name: string;
