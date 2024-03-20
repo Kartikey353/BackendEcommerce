@@ -49,7 +49,6 @@ const paginate_1 = require("../common/pagination/paginate");
 const products_json_1 = __importDefault(require("../db/pickbazar/products.json"));
 const popular_products_json_1 = __importDefault(require("../db/pickbazar/popular-products.json"));
 const best_selling_products_json_1 = __importDefault(require("../db/pickbazar/best-selling-products.json"));
-const fuse_js_1 = __importDefault(require("fuse.js"));
 const products = (0, class_transformer_1.plainToInstance)(product_entity_1.Product, products_json_1.default);
 const popularProducts = (0, class_transformer_1.plainToInstance)(product_entity_1.Product, popular_products_json_1.default);
 const bestSellingProducts = (0, class_transformer_1.plainToInstance)(product_entity_1.Product, best_selling_products_json_1.default);
@@ -66,7 +65,6 @@ const options = {
     ],
     threshold: 0.3,
 };
-const fuse = new fuse_js_1.default(products, options);
 let ProductsService = class ProductsService {
     constructor(Productmodel) {
         this.Productmodel = Productmodel;
@@ -74,128 +72,62 @@ let ProductsService = class ProductsService {
         this.popularProducts = popularProducts;
         this.bestSellingProducts = bestSellingProducts;
     }
-    create(createProductDto) {
-        return this.products[0];
+    async create(createProductDto) {
+        await this.Productmodel.create(createProductDto);
     }
-    getProducts({ limit, page, search }) {
-        var _a;
+    async getProducts({ limit, page, search }) {
         if (!page)
             page = 1;
         if (!limit)
             limit = 30;
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
-        let data = this.products;
+        let query = {};
         if (search) {
             const parseSearchParams = search.split(';');
-            const searchText = [];
             for (const searchParam of parseSearchParams) {
                 const [key, value] = searchParam.split(':');
-                if (key !== 'slug') {
-                    searchText.push({
-                        [key]: value,
-                    });
-                }
+                query[key] = value;
             }
-            data = (_a = fuse
-                .search({
-                $and: searchText,
-            })) === null || _a === void 0 ? void 0 : _a.map(({ item }) => item);
         }
-        const results = data.slice(startIndex, endIndex);
+        const totalProducts = await this.Productmodel.countDocuments(query);
+        const documents = await this.Productmodel.find(query)
+            .skip(startIndex)
+            .limit(limit);
+        const products = documents.map((doc) => doc.toObject());
         const url = `/products?search=${search}&limit=${limit}`;
-        return Object.assign({ data: results }, (0, paginate_1.paginate)(data.length, page, limit, results.length, url));
+        return Object.assign({ data: products }, (0, paginate_1.paginate)(totalProducts, page, limit, products.length, url));
     }
-    getProductBySlug(slug) {
-        const product = this.products.find((p) => p.slug === slug);
-        const related_products = this.products
-            .filter((p) => p.type.slug === product.type.slug)
-            .slice(0, 20);
-        return Object.assign(Object.assign({}, product), { related_products });
+    async getProductByid(id) {
+        const product = await this.Productmodel.findOne({ id: id }).exec();
+        return product;
     }
-    async getProduct() {
-        const res = this.Productmodel.find();
-        return res;
-    }
-    getPopularProducts({ limit, type_slug }) {
-        var _a;
-        let data = this.popularProducts;
+    async getPopularProducts({ limit, type_slug }) {
+        let query = {};
         if (type_slug) {
-            data = (_a = fuse.search(type_slug)) === null || _a === void 0 ? void 0 : _a.map(({ item }) => item);
+            query['type.slug'] = type_slug;
         }
-        return data === null || data === void 0 ? void 0 : data.slice(0, limit);
+        const documents = await this.Productmodel.find(query).limit(limit).exec();
+        const products = documents.map((doc) => doc.toObject());
+        return products;
     }
-    getBestSellingProducts({ limit, type_slug }) {
-        var _a;
-        let data = this.bestSellingProducts;
+    async getBestSellingProducts({ limit, type_slug }) {
+        let query = {};
         if (type_slug) {
-            data = (_a = fuse.search(type_slug)) === null || _a === void 0 ? void 0 : _a.map(({ item }) => item);
+            query['type.slug'] = type_slug;
         }
-        return data === null || data === void 0 ? void 0 : data.slice(0, limit);
+        const documents = await this.Productmodel.find(query).limit(limit).exec();
+        const products = documents.map((doc) => doc.toObject());
+        return products;
     }
-    getProductsStock({ limit, page, search }) {
-        var _a;
-        if (!page)
-            page = 1;
-        if (!limit)
-            limit = 30;
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
-        let data = this.products.filter((item) => item.quantity <= 9);
-        if (search) {
-            const parseSearchParams = search.split(';');
-            const searchText = [];
-            for (const searchParam of parseSearchParams) {
-                const [key, value] = searchParam.split(':');
-                if (key !== 'slug') {
-                    searchText.push({
-                        [key]: value,
-                    });
-                }
-            }
-            data = (_a = fuse
-                .search({
-                $and: searchText,
-            })) === null || _a === void 0 ? void 0 : _a.map(({ item }) => item);
-        }
-        const results = data.slice(startIndex, endIndex);
-        const url = `/products-stock?search=${search}&limit=${limit}`;
-        return Object.assign({ data: results }, (0, paginate_1.paginate)(data.length, page, limit, results.length, url));
+    async updateProduct(id, updateProductDto) {
+        console.log(id);
+        const updatedProduct = await this.Productmodel.updateOne({ id: id }, updateProductDto);
+        return updatedProduct;
     }
-    getDraftProducts({ limit, page, search }) {
-        var _a;
-        if (!page)
-            page = 1;
-        if (!limit)
-            limit = 30;
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
-        let data = this.products.filter((item) => item.status === 'draft');
-        if (search) {
-            const parseSearchParams = search.split(';');
-            const searchText = [];
-            for (const searchParam of parseSearchParams) {
-                const [key, value] = searchParam.split(':');
-                if (key !== 'slug') {
-                    searchText.push({
-                        [key]: value,
-                    });
-                }
-            }
-            data = (_a = fuse
-                .search({
-                $and: searchText,
-            })) === null || _a === void 0 ? void 0 : _a.map(({ item }) => item);
-        }
-        const results = data.slice(startIndex, endIndex);
-        const url = `/draft-products?search=${search}&limit=${limit}`;
-        return Object.assign({ data: results }, (0, paginate_1.paginate)(data.length, page, limit, results.length, url));
-    }
-    update(id, updateProductDto) {
-        return products[0];
-    }
-    remove(id) {
-        return `This action removes a #${id} product`;
+    async deleteProduct(id) {
+        const deletedProduct = await this.Productmodel.deleteOne({ id: id });
+        return deletedProduct;
     }
 };
 ProductsService = __decorate([
