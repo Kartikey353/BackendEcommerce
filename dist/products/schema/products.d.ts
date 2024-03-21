@@ -24,11 +24,11 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Document } from 'mongoose';
 export declare class ProductModel extends Document {
-    id: string;
+    id: number;
     name: string;
     slug: string;
     description: string;
-    type_id: number;
+    type_id: string;
     price: number;
     sale_price: number;
     language: string;

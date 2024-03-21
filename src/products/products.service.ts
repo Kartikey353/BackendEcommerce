@@ -14,6 +14,7 @@ import bestSellingProductsJson from '@db/best-selling-products.json';
 import Fuse from 'fuse.js';
 import { GetPopularProductsDto } from './dto/get-popular-products.dto';
 import { GetBestSellingProductsDto } from './dto/get-best-selling-products.dto';
+import { UploadsService } from 'src/uploads/uploads.service';
 import { Document } from 'mongoose';
 const products = plainToInstance(Product, productsJson);
 const popularProducts = plainToInstance(Product, popularProductsJson);
@@ -32,7 +33,7 @@ const options = {
   ],
   threshold: 0.3,
 };
-const fuse = new Fuse(products, options);
+// const fuse = new Fuse(products, options);
 
 @Injectable()
 export class ProductsService { 
@@ -45,8 +46,8 @@ export class ProductsService {
   private popularProducts: any = popularProducts;
   private bestSellingProducts: any = bestSellingProducts;
 
-  create(createProductDto: CreateProductDto) {
-    return this.products[0];
+  async create(createProductDto: CreateProductDto) {
+     await this.Productmodel.create(createProductDto);
   }
 
 
@@ -65,8 +66,6 @@ export class ProductsService {
         query[key] = value;
       }
     }
-
-    // Find products based on the query conditions
     const totalProducts = await this.Productmodel.countDocuments(query);
     const documents = await this.Productmodel.find(query)
       .skip(startIndex)

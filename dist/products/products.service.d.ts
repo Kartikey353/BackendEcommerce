@@ -12,14 +12,11 @@ export declare class ProductsService {
     private products;
     private popularProducts;
     private bestSellingProducts;
-    create(createProductDto: CreateProductDto): any;
-    getProducts({ limit, page, search }: GetProductsDto): ProductPaginator;
-    getProductBySlug(slug: string): Product;
-    getProduct(): Promise<ProductModel[]>;
-    getPopularProducts({ limit, type_slug }: GetPopularProductsDto): Product[];
-    getBestSellingProducts({ limit, type_slug }: GetBestSellingProductsDto): Product[];
-    getProductsStock({ limit, page, search }: GetProductsDto): ProductPaginator;
-    getDraftProducts({ limit, page, search }: GetProductsDto): ProductPaginator;
-    update(id: number, updateProductDto: UpdateProductDto): Product;
-    remove(id: number): string;
+    create(createProductDto: CreateProductDto): Promise<void>;
+    getProducts({ limit, page, search }: GetProductsDto): Promise<ProductPaginator>;
+    getProductByid(id: number): Promise<ProductModel>;
+    getPopularProducts({ limit, type_slug }: GetPopularProductsDto): Promise<Product[]>;
+    getBestSellingProducts({ limit, type_slug }: GetBestSellingProductsDto): Promise<Product[]>;
+    updateProduct(id: number, updateProductDto: UpdateProductDto): Promise<mongoose.UpdateWriteOpResult>;
+    deleteProduct(id: number): Promise<mongoose.mongo.DeleteResult>;
 }

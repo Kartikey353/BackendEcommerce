@@ -21,8 +21,6 @@ ProductsModule = __decorate([
             products_controller_1.ProductsController,
             products_controller_1.PopularProductsController,
             products_controller_1.BestSellingProductsController,
-            products_controller_1.ProductsStockController,
-            products_controller_1.DraftProductsController,
         ],
         imports: [mongoose_1.MongooseModule.forFeature([{ name: products_2.ProductModel.name, schema: products_1.ProductSchema }])],
         providers: [products_service_1.ProductsService],

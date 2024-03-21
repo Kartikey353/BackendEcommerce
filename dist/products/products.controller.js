@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductsStockController = exports.DraftProductsController = exports.BestSellingProductsController = exports.PopularProductsController = exports.ProductsController = void 0;
+exports.BestSellingProductsController = exports.PopularProductsController = exports.ProductsController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const products_service_1 = require("./products.service");
@@ -31,22 +31,20 @@ let ProductsController = class ProductsController {
     async getProducts(query) {
         return this.productsService.getProducts(query);
     }
-    async getProduct() {
-        return this.productsService.getProduct();
-    }
-    async getProductBySlug(slug) {
-        return this.productsService.getProductBySlug(slug);
+    async getProduct(id) {
+        return this.productsService.getProductByid(+id);
     }
     update(id, updateProductDto) {
-        return this.productsService.update(+id, updateProductDto);
+        console.log(updateProductDto);
+        return this.productsService.updateProduct(+id, updateProductDto);
     }
     remove(id) {
-        return this.productsService.remove(+id);
+        return this.productsService.deleteProduct(+id);
     }
 };
 __decorate([
     (0, common_1.Post)(),
-    openapi.ApiResponse({ status: 201, type: Object }),
+    openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
@@ -61,23 +59,16 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getProducts", null);
 __decorate([
-    (0, common_1.Get)("single"),
-    openapi.ApiResponse({ status: 200, type: [require("./schema/products").ProductModel] }),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ProductsController.prototype, "getProduct", null);
-__decorate([
-    (0, common_1.Get)(':slug'),
-    openapi.ApiResponse({ status: 200, type: require("./entities/product.entity").Product }),
-    __param(0, (0, common_1.Param)('slug')),
+    (0, common_1.Get)(":id"),
+    openapi.ApiResponse({ status: 200, type: require("./schema/products").ProductModel }),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], ProductsController.prototype, "getProductBySlug", null);
+], ProductsController.prototype, "getProduct", null);
 __decorate([
-    (0, common_1.Put)(':id'),
-    openapi.ApiResponse({ status: 200, type: require("./entities/product.entity").Product }),
+    (0, common_1.Patch)(':id'),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -86,7 +77,7 @@ __decorate([
 ], ProductsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    openapi.ApiResponse({ status: 200, type: String }),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -139,46 +130,4 @@ BestSellingProductsController = __decorate([
     __metadata("design:paramtypes", [products_service_1.ProductsService])
 ], BestSellingProductsController);
 exports.BestSellingProductsController = BestSellingProductsController;
-let DraftProductsController = class DraftProductsController {
-    constructor(productsService) {
-        this.productsService = productsService;
-    }
-    async getProducts(query) {
-        return this.productsService.getDraftProducts(query);
-    }
-};
-__decorate([
-    (0, common_1.Get)(),
-    openapi.ApiResponse({ status: 200, type: require("./dto/get-products.dto").ProductPaginator }),
-    __param(0, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [get_products_dto_1.GetProductsDto]),
-    __metadata("design:returntype", Promise)
-], DraftProductsController.prototype, "getProducts", null);
-DraftProductsController = __decorate([
-    (0, common_1.Controller)('draft-products'),
-    __metadata("design:paramtypes", [products_service_1.ProductsService])
-], DraftProductsController);
-exports.DraftProductsController = DraftProductsController;
-let ProductsStockController = class ProductsStockController {
-    constructor(productsService) {
-        this.productsService = productsService;
-    }
-    async getProducts(query) {
-        return this.productsService.getProductsStock(query);
-    }
-};
-__decorate([
-    (0, common_1.Get)(),
-    openapi.ApiResponse({ status: 200, type: require("./dto/get-products.dto").ProductPaginator }),
-    __param(0, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [get_products_dto_1.GetProductsDto]),
-    __metadata("design:returntype", Promise)
-], ProductsStockController.prototype, "getProducts", null);
-ProductsStockController = __decorate([
-    (0, common_1.Controller)('products-stock'),
-    __metadata("design:paramtypes", [products_service_1.ProductsService])
-], ProductsStockController);
-exports.ProductsStockController = ProductsStockController;
 //# sourceMappingURL=products.controller.js.map

@@ -17,7 +17,7 @@ let ProductModel = class ProductModel extends mongoose_2.Document {
 };
 __decorate([
     (0, mongoose_1.Prop)({ default: uuid_1.v4 }),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], ProductModel.prototype, "id", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
@@ -33,7 +33,7 @@ __decorate([
 ], ProductModel.prototype, "description", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: uuid_1.v4 }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], ProductModel.prototype, "type_id", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
@@ -100,7 +100,7 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductModel.prototype, "length", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: String, required: true }),
+    (0, mongoose_1.Prop)({ type: Object }),
     __metadata("design:type", Object)
 ], ProductModel.prototype, "image", void 0);
 __decorate([
@@ -108,7 +108,7 @@ __decorate([
     __metadata("design:type", String)
 ], ProductModel.prototype, "video", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: String }),
+    (0, mongoose_1.Prop)({ type: Object }),
     __metadata("design:type", Array)
 ], ProductModel.prototype, "gallery", void 0);
 __decorate([
